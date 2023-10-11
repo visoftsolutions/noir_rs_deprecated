@@ -2,6 +2,7 @@ use core::slice;
 use std::ffi::CStr;
 
 pub mod acir;
+pub mod circuit;
 pub mod examples;
 pub mod srs;
 

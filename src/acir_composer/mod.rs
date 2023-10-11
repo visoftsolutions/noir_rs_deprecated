@@ -1,3 +1,6 @@
+#[cfg(test)]
+pub mod test;
+
 use crate::bindings::acir::{
     create_proof, delete, get_solidity_verifier, get_verification_key, init_proving_key,
     init_verification_key, load_verification_key, new_acir_composer, serialize_proof_into_fields,
@@ -14,7 +17,7 @@ impl AcirComposer {
     /// * `size_hint` - Hint for the size of the composer.
     /// # Returns
     /// * `Result<AcirComposer, String>` - Returns an AcirComposer instance or an error message.
-    pub fn new_acir_composer(size_hint: &u32) -> Result<Self, String> {
+    pub fn new(size_hint: &u32) -> Result<Self, String> {
         new_acir_composer(size_hint).map(|ptr| Self { composer_ptr: ptr })
     }
 
