@@ -1,1 +1,1 @@
-# bb.rs
+# barretenberg_rs
