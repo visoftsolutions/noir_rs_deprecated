@@ -49,7 +49,9 @@ impl NetSrs {
         );
 
         let response = Client::new()
-            .get("https://aztec-ignition.s3.amazonaws.com/MAIN%20IGNITION/monomial/transcript00.dat")
+            .get(
+                "https://aztec-ignition.s3.amazonaws.com/MAIN%20IGNITION/monomial/transcript00.dat",
+            )
             .headers(headers)
             .send()
             .unwrap();

@@ -1,17 +1,12 @@
 use crate::rust_srs_init_srs;
 
-use super::{parse_c_str};
+use super::parse_c_str;
 
 pub mod netsrs;
 
 pub fn srs_init(points_buf: &[u8], num_points: u32, g2_point_buf: &[u8]) -> Result<(), String> {
-    let error_msg_ptr = unsafe {
-        rust_srs_init_srs(
-            points_buf.as_ptr(),
-            &num_points,
-            g2_point_buf.as_ptr(),
-        )
-    };
+    let error_msg_ptr =
+        unsafe { rust_srs_init_srs(points_buf.as_ptr(), &num_points, g2_point_buf.as_ptr()) };
     if !error_msg_ptr.is_null() {
         return Err(format!(
             "C++ error: {}",
