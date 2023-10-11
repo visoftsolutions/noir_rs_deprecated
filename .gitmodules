@@ -1,4 +1,3 @@
 [submodule "aztec-packages"]
 	path = aztec-packages
 	url = https://github.com/visoftsolutions/aztec-packages.git
-	branch = visoftsolutions
