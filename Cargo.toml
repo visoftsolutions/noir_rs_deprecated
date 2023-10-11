@@ -5,4 +5,17 @@ edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+links = "barretenberg"
+
 [dependencies]
+link-cplusplus = "1.0.9"
+base64 = "0.21.4"
+flate2 = "1.0.27"
+hex = "0.4.3"
+reqwest = { version = "0.11.22", features = ["blocking"] }
+
+[dev-dependencies]
+
+[build-dependencies]
+bindgen = "0.68.1"
+cc = "1.0.83"
