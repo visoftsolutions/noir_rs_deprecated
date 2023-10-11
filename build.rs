@@ -16,26 +16,26 @@ fn main() {
         .header_contents(
             "wrapper.hpp",
             r#"
-            #include <barretenberg/dsl/acir_proofs/acir_proofs.hpp>
-            #include <barretenberg/srs/c_bind.hpp>
-            #include <barretenberg/examples/c_bind.hpp>
+            #include <barretenberg/dsl/acir_proofs/rust_bind.hpp>
+            #include <barretenberg/srs/rust_bind.hpp>
+            #include <barretenberg/examples/rust_bind.hpp>
             "#,
         )
-        .allowlist_function("acir_get_circuit_sizes")
-        .allowlist_function("acir_new_acir_composer")
-        .allowlist_function("acir_delete_acir_composer")
-        .allowlist_function("acir_create_circuit")
-        .allowlist_function("acir_init_proving_key")
-        .allowlist_function("acir_create_proof")
-        .allowlist_function("acir_load_verification_key")
-        .allowlist_function("acir_init_verification_key")
-        .allowlist_function("acir_get_verification_key")
-        .allowlist_function("acir_verify_proof")
-        .allowlist_function("acir_get_solidity_verifier")
-        .allowlist_function("acir_serialize_proof_into_fields")
-        .allowlist_function("acir_serialize_verification_key_into_fields")
-        .allowlist_function("srs_init_srs")
-        .allowlist_function("examples_simple_create_and_verify_proof")
+        .allowlist_function("rust_acir_get_circuit_sizes")
+        .allowlist_function("rust_acir_new_acir_composer")
+        .allowlist_function("rust_acir_delete_acir_composer")
+        .allowlist_function("rust_acir_create_circuit")
+        .allowlist_function("rust_acir_init_proving_key")
+        .allowlist_function("rust_acir_create_proof")
+        .allowlist_function("rust_acir_load_verification_key")
+        .allowlist_function("rust_acir_init_verification_key")
+        .allowlist_function("rust_acir_get_verification_key")
+        .allowlist_function("rust_acir_verify_proof")
+        .allowlist_function("rust_acir_get_solidity_verifier")
+        .allowlist_function("rust_acir_serialize_proof_into_fields")
+        .allowlist_function("rust_acir_serialize_verification_key_into_fields")
+        .allowlist_function("rust_srs_init_srs")
+        .allowlist_function("rust_examples_simple_create_and_verify_proof")
         .generate()
         .expect("Couldn't generate bindings!");
 
