@@ -4,6 +4,8 @@ use std::ffi::CStr;
 pub mod acir;
 pub mod circuit;
 pub mod examples;
+pub mod pedersen;
+pub mod schnorr;
 pub mod srs;
 
 pub struct Buffer {

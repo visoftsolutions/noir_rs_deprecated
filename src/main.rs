@@ -4,6 +4,7 @@
 #![allow(non_snake_case)]
 
 pub mod acir_composer;
+pub mod acvm;
 pub mod bindings;
 
 // This matches bindgen::Builder output
