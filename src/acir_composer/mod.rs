@@ -1,10 +1,14 @@
 #[cfg(test)]
 pub mod test;
 
-use crate::bindings::acir::{
-    create_proof, delete, get_solidity_verifier, get_verification_key, init_proving_key,
-    init_verification_key, load_verification_key, new_acir_composer, serialize_proof_into_fields,
-    serialize_verification_key_into_fields, verify_proof, AcirComposerPtr,
+use crate::bindings::{
+    acir::{
+        create_proof, delete, get_solidity_verifier, get_verification_key, init_proving_key,
+        init_verification_key, load_verification_key, new_acir_composer,
+        serialize_proof_into_fields, serialize_verification_key_into_fields, verify_proof,
+        AcirComposerPtr,
+    },
+    BackendError,
 };
 
 pub struct AcirComposer {
@@ -16,18 +20,18 @@ impl AcirComposer {
     /// # Arguments
     /// * `size_hint` - Hint for the size of the composer.
     /// # Returns
-    /// * `Result<AcirComposer, String>` - Returns an AcirComposer instance or an error message.
-    pub fn new(size_hint: &u32) -> Result<Self, String> {
-        new_acir_composer(size_hint).map(|ptr| Self { composer_ptr: ptr })
+    /// * `Result<AcirComposer, AcirComposerError>` - Returns an AcirComposer instance or an AcirComposerError.
+    pub fn new(size_hint: &u32) -> Result<Self, AcirComposerError> {
+        Ok(new_acir_composer(size_hint).map(|ptr| Self { composer_ptr: ptr })?)
     }
 
     /// Initializes the proving key for the given composer.
     /// # Arguments
     /// * `constraint_system_buf` - Buffer representing the constraint system.
     /// # Returns
-    /// * `Result<(), String>` - Returns an empty result or an error message.
-    pub fn init_proving_key(&self, constraint_system_buf: &[u8]) -> Result<(), String> {
-        init_proving_key(&self.composer_ptr, constraint_system_buf)
+    /// * `Result<(), String>` - Returns an empty result or an AcirComposerError.
+    pub fn init_proving_key(&self, constraint_system_buf: &[u8]) -> Result<(), AcirComposerError> {
+        Ok(init_proving_key(&self.composer_ptr, constraint_system_buf)?)
     }
 
     /// Creates a proof using the provided constraint system buffer and witness.
@@ -36,34 +40,34 @@ impl AcirComposer {
     /// * `witness` - Buffer representing the witness.
     /// * `is_recursive` - Boolean indicating whether the proof is recursive.
     /// # Returns
-    /// * `Result<Vec<u8>, String>` - Returns the created proof or an error message.
+    /// * `Result<Vec<u8>, AcirComposerError>` - Returns the created proof or an AcirComposerError.
     pub fn create_proof(
         &self,
         constraint_system_buf: &[u8],
         witness: &[u8],
         is_recursive: bool,
-    ) -> Result<Vec<u8>, String> {
-        create_proof(
+    ) -> Result<Vec<u8>, AcirComposerError> {
+        Ok(create_proof(
             &self.composer_ptr,
             constraint_system_buf,
             witness,
             is_recursive,
-        )
+        )?)
     }
 
     /// Loads the verification key into the given composer.
     /// # Arguments
     /// * `verification_key` - Buffer representing the verification key.
     /// # Returns
-    /// * `Result<(), String>` - Returns an empty result or an error message.
-    pub fn load_verification_key(&self, verification_key: &[u8]) -> Result<(), String> {
-        load_verification_key(&self.composer_ptr, verification_key)
+    /// * `Result<(), AcirComposerError>` - Returns an empty result or an AcirComposerError.
+    pub fn load_verification_key(&self, verification_key: &[u8]) -> Result<(), AcirComposerError> {
+        Ok(load_verification_key(&self.composer_ptr, verification_key)?)
     }
 
     /// Initializes the ACIR composer's verification key.
     /// # Returns
     /// * `Result<(), String>` - Returns an empty result or an error message if there's an issue with the initialization.
-    pub fn init_verification_key(&self) -> Result<(), String> {
+    pub fn init_verification_key(&self) -> Result<(), BackendError> {
         init_verification_key(&self.composer_ptr)
     }
 
@@ -71,9 +75,9 @@ impl AcirComposer {
     /// # Arguments
     /// * `acir_composer` - Pointer to the ACIR composer.
     /// # Returns
-    /// * `Result<Vec<u8>, String>` - Returns the verification key or an error message.
-    pub fn get_verification_key(&self) -> Result<Vec<u8>, String> {
-        get_verification_key(&self.composer_ptr)
+    /// * `Result<Vec<u8>, AcirComposerError>` - Returns the verification key or an AcirComposerError.
+    pub fn get_verification_key(&self) -> Result<Vec<u8>, AcirComposerError> {
+        Ok(get_verification_key(&self.composer_ptr)?)
     }
 
     /// Verifies the proof with the ACIR composer.
@@ -81,16 +85,20 @@ impl AcirComposer {
     /// * `proof` - Buffer representing the proof.
     /// * `is_recursive` - Boolean indicating whether the proof is recursive.
     /// # Returns
-    /// * `Result<bool, String>` - Returns `true` if the verification succeeds, `false` otherwise, or an error message.
-    pub fn verify_proof(&self, proof: &[u8], is_recursive: bool) -> Result<bool, String> {
-        verify_proof(&self.composer_ptr, proof, is_recursive)
+    /// * `Result<bool, AcirComposerError>` - Returns `true` if the verification succeeds, `false` otherwise, or an AcirComposerError.
+    pub fn verify_proof(
+        &self,
+        proof: &[u8],
+        is_recursive: bool,
+    ) -> Result<bool, AcirComposerError> {
+        Ok(verify_proof(&self.composer_ptr, proof, is_recursive)?)
     }
 
     /// Gets the Solidity verifier string representation from the ACIR composer.
     /// # Returns
-    /// * `Result<String, String>` - Returns the Solidity verifier string or an error message.
-    pub fn get_solidity_verifier(&self) -> Result<String, String> {
-        get_solidity_verifier(&self.composer_ptr)
+    /// * `Result<String, AcirComposerError>` - Returns the Solidity verifier string or an AcirComposerError.
+    pub fn get_solidity_verifier(&self) -> Result<String, AcirComposerError> {
+        Ok(get_solidity_verifier(&self.composer_ptr)?)
     }
 
     /// Serializes the provided proof into fields.
@@ -98,22 +106,28 @@ impl AcirComposer {
     /// * `proof` - Buffer representing the proof.
     /// * `num_inner_public_inputs` - Number of inner public inputs.
     /// # Returns
-    /// * `Result<Vec<u8>, String>` - Returns the serialized proof or an error message.
+    /// * `Result<Vec<u8>, AcirComposerError>` - Returns the serialized proof or an AcirComposerError.
     pub fn serialize_proof_into_fields(
         &self,
         proof: &[u8],
         num_inner_public_inputs: u32,
-    ) -> Result<Vec<u8>, String> {
-        serialize_proof_into_fields(&self.composer_ptr, proof, num_inner_public_inputs)
+    ) -> Result<Vec<u8>, AcirComposerError> {
+        Ok(serialize_proof_into_fields(
+            &self.composer_ptr,
+            proof,
+            num_inner_public_inputs,
+        )?)
     }
 
     /// Serializes the verification key into field elements.
     /// # Arguments
     /// * `acir_composer` - Pointer to the ACIR composer.
     /// # Returns
-    /// * `Result<(Vec<u8>, Vec<u8>), String>` - Returns serialized verification key and its hash, or an error message.
-    pub fn serialize_verification_key_into_fields(&self) -> Result<(Vec<u8>, Vec<u8>), String> {
-        serialize_verification_key_into_fields(&self.composer_ptr)
+    /// * `Result<(Vec<u8>, Vec<u8>), AcirComposerError>` - Returns serialized verification key and its hash, or an AcirComposerError.
+    pub fn serialize_verification_key_into_fields(
+        &self,
+    ) -> Result<(Vec<u8>, Vec<u8>), AcirComposerError> {
+        Ok(serialize_verification_key_into_fields(&self.composer_ptr)?)
     }
 }
 
@@ -123,4 +137,10 @@ impl Drop for AcirComposer {
             eprintln!("Error when dropping AcirComposer: {}", e);
         }
     }
+}
+
+#[derive(thiserror::Error, Debug)]
+pub enum AcirComposerError {
+    #[error("BackendError")]
+    BackendError(#[from] BackendError),
 }

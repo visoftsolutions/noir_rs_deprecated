@@ -8,6 +8,14 @@ pub mod pedersen;
 pub mod schnorr;
 pub mod srs;
 
+#[derive(Debug, thiserror::Error)]
+pub enum BackendError {
+    #[error("Binding call error")]
+    BindingCallError(String),
+    #[error("Binding call output pointer error")]
+    BindingCallPointerError(String),
+}
+
 pub struct Buffer {
     data: Vec<u8>,
 }
@@ -18,9 +26,11 @@ impl Buffer {
     /// # Safety
     /// This method is unsafe because it trusts the caller to ensure that `ptr` is a valid pointer
     /// pointing to at least `u32` bytes plus the length indicated by the u32 value.
-    pub unsafe fn from_ptr(ptr: *const u8) -> Result<Self, String> {
+    pub unsafe fn from_ptr(ptr: *const u8) -> Result<Self, BackendError> {
         if ptr.is_null() {
-            return Err("Pointer is null.".to_string());
+            return Err(BackendError::BindingCallPointerError(
+                "Pointer is null.".to_string(),
+            ));
         }
         let len_slice = slice::from_raw_parts(ptr, 4);
         let len = u32::from_be_bytes([len_slice[0], len_slice[1], len_slice[2], len_slice[3]]);

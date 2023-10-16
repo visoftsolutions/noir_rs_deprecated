@@ -8,7 +8,7 @@ use crate::{
     rust_acir_verify_proof,
 };
 
-use super::{serialize_slice, Buffer};
+use super::{serialize_slice, BackendError, Buffer};
 
 // Wrapper functions to interface with C++ ACIR operations.
 
@@ -19,17 +19,19 @@ pub type AcirComposerPtr = *mut c_void;
 /// * `size_hint` - Hint for the size of the composer.
 /// # Returns
 /// * `Result<AcirComposerPtr, String>` - Returns a pointer to the ACIR composer or an error message.
-pub fn new_acir_composer(size_hint: &u32) -> Result<AcirComposerPtr, String> {
+pub fn new_acir_composer(size_hint: &u32) -> Result<AcirComposerPtr, BackendError> {
     let mut out_ptr = ptr::null_mut();
     let error_msg_ptr = unsafe { rust_acir_new_acir_composer(size_hint, &mut out_ptr) };
     if !error_msg_ptr.is_null() {
-        return Err(format!(
+        return Err(BackendError::BindingCallError(format!(
             "C++ error: {}",
             unsafe { parse_c_str(error_msg_ptr) }.unwrap_or("Parsing c_str failed".to_string())
-        ));
+        )));
     }
     if out_ptr.is_null() {
-        return Err("Failed to create a new ACIR composer.".to_string());
+        return Err(BackendError::BindingCallPointerError(
+            "Failed to create a new ACIR composer.".to_string(),
+        ));
     }
     Ok(out_ptr)
 }
@@ -43,7 +45,7 @@ pub fn new_acir_composer(size_hint: &u32) -> Result<AcirComposerPtr, String> {
 pub fn init_proving_key(
     acir_composer: &AcirComposerPtr,
     constraint_system_buf: &[u8],
-) -> Result<(), String> {
+) -> Result<(), BackendError> {
     let error_msg_ptr = unsafe {
         rust_acir_init_proving_key(
             acir_composer,
@@ -51,10 +53,10 @@ pub fn init_proving_key(
         )
     };
     if !error_msg_ptr.is_null() {
-        return Err(format!(
+        return Err(BackendError::BindingCallError(format!(
             "C++ error: {}",
             unsafe { parse_c_str(error_msg_ptr) }.unwrap_or("Parsing c_str failed".to_string())
-        ));
+        )));
     }
     Ok(())
 }
@@ -72,7 +74,7 @@ pub fn create_proof(
     constraint_system_buf: &[u8],
     witness: &[u8],
     is_recursive: bool,
-) -> Result<Vec<u8>, String> {
+) -> Result<Vec<u8>, BackendError> {
     let mut out_ptr = ptr::null_mut();
     let error_msg_ptr = unsafe {
         rust_acir_create_proof(
@@ -84,10 +86,10 @@ pub fn create_proof(
         )
     };
     if !error_msg_ptr.is_null() {
-        return Err(format!(
+        return Err(BackendError::BindingCallError(format!(
             "C++ error: {}",
             unsafe { parse_c_str(error_msg_ptr) }.unwrap_or("Parsing c_str failed".to_string())
-        ));
+        )));
     }
     let result = unsafe {
         Buffer::from_ptr(Buffer::from_ptr(out_ptr)?.to_vec().as_slice().as_ptr())?.to_vec()
@@ -104,14 +106,14 @@ pub fn create_proof(
 pub fn load_verification_key(
     acir_composer: &AcirComposerPtr,
     verification_key: &[u8],
-) -> Result<(), String> {
+) -> Result<(), BackendError> {
     let error_msg_ptr =
         unsafe { rust_acir_load_verification_key(acir_composer, verification_key.as_ptr()) };
     if !error_msg_ptr.is_null() {
-        return Err(format!(
+        return Err(BackendError::BindingCallError(format!(
             "C++ error: {}",
             unsafe { parse_c_str(error_msg_ptr) }.unwrap_or("Parsing c_str failed".to_string())
-        ));
+        )));
     }
     Ok(())
 }
@@ -121,13 +123,13 @@ pub fn load_verification_key(
 /// * `acir_composer` - Pointer to the ACIR composer.
 /// # Returns
 /// * `Result<(), String>` - Returns an empty result or an error message if there's an issue with the initialization.
-pub fn init_verification_key(acir_composer: &AcirComposerPtr) -> Result<(), String> {
+pub fn init_verification_key(acir_composer: &AcirComposerPtr) -> Result<(), BackendError> {
     let error_msg_ptr = unsafe { rust_acir_init_verification_key(acir_composer) };
     if !error_msg_ptr.is_null() {
-        return Err(format!(
+        return Err(BackendError::BindingCallError(format!(
             "C++ error: {}",
             unsafe { parse_c_str(error_msg_ptr) }.unwrap_or("Parsing c_str failed".to_string())
-        ));
+        )));
     }
     Ok(())
 }
@@ -137,14 +139,14 @@ pub fn init_verification_key(acir_composer: &AcirComposerPtr) -> Result<(), Stri
 /// * `acir_composer` - Pointer to the ACIR composer.
 /// # Returns
 /// * `Result<Vec<u8>, String>` - Returns the verification key or an error message.
-pub fn get_verification_key(acir_composer: &AcirComposerPtr) -> Result<Vec<u8>, String> {
+pub fn get_verification_key(acir_composer: &AcirComposerPtr) -> Result<Vec<u8>, BackendError> {
     let mut out_ptr = ptr::null_mut();
     let error_msg_ptr = unsafe { rust_acir_get_verification_key(acir_composer, &mut out_ptr) };
     if !error_msg_ptr.is_null() {
-        return Err(format!(
+        return Err(BackendError::BindingCallError(format!(
             "C++ error: {}",
             unsafe { parse_c_str(error_msg_ptr) }.unwrap_or("Parsing c_str failed".to_string())
-        ));
+        )));
     }
     let result = unsafe { Buffer::from_ptr(out_ptr)?.to_vec() };
     Ok(result)
@@ -161,7 +163,7 @@ pub fn verify_proof(
     acir_composer: &AcirComposerPtr,
     proof: &[u8],
     is_recursive: bool,
-) -> Result<bool, String> {
+) -> Result<bool, BackendError> {
     let mut result = false;
     let error_msg_ptr = unsafe {
         rust_acir_verify_proof(
@@ -172,10 +174,10 @@ pub fn verify_proof(
         )
     };
     if !error_msg_ptr.is_null() {
-        return Err(format!(
+        return Err(BackendError::BindingCallError(format!(
             "C++ error: {}",
             unsafe { parse_c_str(error_msg_ptr) }.unwrap_or("Parsing c_str failed".to_string())
-        ));
+        )));
     }
     Ok(result)
 }
@@ -185,14 +187,14 @@ pub fn verify_proof(
 /// * `acir_composer` - Pointer to the ACIR composer.
 /// # Returns
 /// * `Result<String, String>` - Returns the Solidity verifier string or an error message.
-pub fn get_solidity_verifier(acir_composer: &AcirComposerPtr) -> Result<String, String> {
+pub fn get_solidity_verifier(acir_composer: &AcirComposerPtr) -> Result<String, BackendError> {
     let mut out_ptr: *mut u8 = ptr::null_mut();
     let error_msg_ptr = unsafe { rust_acir_get_solidity_verifier(acir_composer, &mut out_ptr) };
     if !error_msg_ptr.is_null() {
-        return Err(format!(
+        return Err(BackendError::BindingCallError(format!(
             "C++ error: {}",
             unsafe { parse_c_str(error_msg_ptr) }.unwrap_or("Parsing c_str failed".to_string())
-        ));
+        )));
     }
     let verifier_string =
         unsafe { parse_c_str(error_msg_ptr) }.unwrap_or("Parsing c_str failed".to_string());
@@ -210,7 +212,7 @@ pub fn serialize_proof_into_fields(
     acir_composer: &AcirComposerPtr,
     proof: &[u8],
     num_inner_public_inputs: u32,
-) -> Result<Vec<u8>, String> {
+) -> Result<Vec<u8>, BackendError> {
     let mut out_ptr: *mut u8 = ptr::null_mut();
     let error_msg_ptr = unsafe {
         rust_acir_serialize_proof_into_fields(
@@ -221,10 +223,10 @@ pub fn serialize_proof_into_fields(
         )
     };
     if !error_msg_ptr.is_null() {
-        return Err(format!(
+        return Err(BackendError::BindingCallError(format!(
             "C++ error: {}",
             unsafe { parse_c_str(error_msg_ptr) }.unwrap_or("Parsing c_str failed".to_string())
-        ));
+        )));
     }
     let result = unsafe { Buffer::from_ptr(out_ptr)?.to_vec() };
     Ok(result)
@@ -237,7 +239,7 @@ pub fn serialize_proof_into_fields(
 /// * `Result<(Vec<u8>, Vec<u8>), String>` - Returns serialized verification key and its hash, or an error message.
 pub fn serialize_verification_key_into_fields(
     acir_composer: &AcirComposerPtr,
-) -> Result<(Vec<u8>, Vec<u8>), String> {
+) -> Result<(Vec<u8>, Vec<u8>), BackendError> {
     let mut out_vkey_ptr: *mut u8 = ptr::null_mut();
     let out_key_hash_ptr: *mut u8 = ptr::null_mut();
     let error_msg_ptr = unsafe {
@@ -248,10 +250,10 @@ pub fn serialize_verification_key_into_fields(
         )
     };
     if !error_msg_ptr.is_null() {
-        return Err(format!(
+        return Err(BackendError::BindingCallError(format!(
             "C++ error: {}",
             unsafe { parse_c_str(error_msg_ptr) }.unwrap_or("Parsing c_str failed".to_string())
-        ));
+        )));
     }
     let vkey = unsafe { Buffer::from_ptr(out_vkey_ptr)?.to_vec() };
     let key_hash = unsafe { Buffer::from_ptr(out_key_hash_ptr)?.to_vec() };

@@ -1,14 +1,26 @@
 use acvm::FieldElement;
 
-use super::{barretenberg_structures::Assignments, BlackboxSolver, Error};
+use super::{barretenberg_structures::Assignments, BlackboxSolver, RuntimeError};
 use crate::bindings::pedersen;
 
+/// Defines the `Pedersen` trait, which offers the capability to encrypt inputs using the Pedersen hash function.
 pub(crate) trait Pedersen {
+    /// Encrypts a vector of `FieldElement` inputs using the Pedersen hash function.
+    ///
+    /// # Parameters
+    ///
+    /// * `inputs`: The values to be encrypted.
+    /// * `hash_index`: The index used in the Pedersen hash function.
+    ///
+    /// # Returns
+    ///
+    /// Returns a tuple of `FieldElement` representing the x and y coordinates of the encrypted point.
+    /// On failure, it returns a `RuntimeError`.
     fn encrypt(
         &self,
         inputs: Vec<FieldElement>,
         hash_index: u32,
-    ) -> Result<(FieldElement, FieldElement), Error>;
+    ) -> Result<(FieldElement, FieldElement), RuntimeError>;
 }
 
 impl Pedersen for BlackboxSolver {
@@ -16,10 +28,9 @@ impl Pedersen for BlackboxSolver {
         &self,
         inputs: Vec<FieldElement>,
         hash_index: u32,
-    ) -> Result<(FieldElement, FieldElement), Error> {
+    ) -> Result<(FieldElement, FieldElement), RuntimeError> {
         let input_buf = Assignments::from(inputs).to_bytes();
-        let result =
-            pedersen::plookup_commit_with_hash_index(input_buf.as_slice(), hash_index).unwrap();
+        let result = pedersen::plookup_commit_with_hash_index(input_buf.as_slice(), hash_index)?;
         let (point_x_bytes, point_y_bytes) = result.split_at(32);
         let point_x = FieldElement::from_be_bytes_reduce(point_x_bytes);
         let point_y = FieldElement::from_be_bytes_reduce(point_y_bytes);

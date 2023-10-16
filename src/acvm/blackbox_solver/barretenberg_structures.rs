@@ -1,10 +1,23 @@
 use acvm::FieldElement;
 
+/// Represents a collection of assignments in the form of field elements.
+///
+/// This struct acts as a convenient wrapper around a vector of `FieldElement`,
+/// providing utility methods for common operations like serialization.
 #[derive(Debug, Default)]
-pub(crate) struct Assignments(Vec<FieldElement>);
+pub struct Assignments(Vec<FieldElement>);
 
 impl Assignments {
-    pub(crate) fn to_bytes(&self) -> Vec<u8> {
+    /// Serializes the assignments into a byte vector.
+    ///
+    /// The resulting byte vector begins with a 4-byte representation
+    /// of the number of assignments, followed by the byte representation
+    /// of each assignment in a big-endian format.
+    ///
+    /// # Returns
+    ///
+    /// A `Vec<u8>` containing the serialized form of the assignments.
+    pub fn to_bytes(&self) -> Vec<u8> {
         let mut buffer = Vec::new();
 
         let witness_len = self.0.len() as u32;

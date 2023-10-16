@@ -1,5 +1,5 @@
 use crate::{
-    bindings::{parse_c_str, serialize_slice},
+    bindings::{parse_c_str, serialize_slice, BackendError},
     rust_acir_get_circuit_sizes,
 };
 
@@ -44,7 +44,7 @@ pub struct CircuitSizes {
 /// println!("Total size: {}", sizes.total);
 /// println!("Subgroup size: {}", sizes.subgroup);
 /// ```
-pub fn get_circuit_sizes(constraint_system_buf: &[u8]) -> Result<CircuitSizes, String> {
+pub fn get_circuit_sizes(constraint_system_buf: &[u8]) -> Result<CircuitSizes, BackendError> {
     let mut ret = CircuitSizes::default();
     let error_msg_ptr = unsafe {
         rust_acir_get_circuit_sizes(
@@ -55,10 +55,10 @@ pub fn get_circuit_sizes(constraint_system_buf: &[u8]) -> Result<CircuitSizes, S
         )
     };
     if !error_msg_ptr.is_null() {
-        return Err(format!(
+        return Err(BackendError::BindingCallError(format!(
             "C++ error: {}",
             unsafe { parse_c_str(error_msg_ptr) }.unwrap_or("Parsing c_str failed".to_string())
-        ));
+        )));
     }
     Ok(ret)
 }
