@@ -1,7 +1,7 @@
 #[cfg(test)]
 pub mod test;
 
-use crate::bindings::{
+use barretenberg::{
     acir::{
         create_proof, delete, get_solidity_verifier, get_verification_key, init_proving_key,
         init_verification_key, load_verification_key, new_acir_composer,

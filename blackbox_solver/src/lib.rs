@@ -8,7 +8,7 @@
 
 use acvm::acir::BlackBoxFunc;
 
-use crate::bindings::BackendError;
+use barretenberg::BackendError;
 
 use self::{
     pedersen::Pedersen,

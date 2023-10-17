@@ -1,7 +1,7 @@
 use acvm::FieldElement;
 
 use super::{barretenberg_structures::Assignments, BlackboxSolver, RuntimeError};
-use crate::bindings::pedersen;
+use barretenberg::pedersen;
 
 /// Defines the `Pedersen` trait, which offers the capability to encrypt inputs using the Pedersen hash function.
 pub(crate) trait Pedersen {

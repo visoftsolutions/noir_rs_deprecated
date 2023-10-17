@@ -2,7 +2,7 @@ use acvm::FieldElement;
 use num_bigint::BigUint;
 
 use super::{BlackboxSolver, RuntimeError};
-use crate::bindings::schnorr;
+use barretenberg::schnorr;
 
 /// Trait defining the scalar multiplication operations, particularly with a fixed base.
 pub(crate) trait ScalarMul {

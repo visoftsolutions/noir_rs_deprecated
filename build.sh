@@ -1,4 +1,4 @@
-cd aztec-packages/barretenberg/cpp/
+cd barretenberg/aztec-packages/barretenberg/cpp/
 # Clean.
 rm -rf ./build
 rm -rf ./build-wasm

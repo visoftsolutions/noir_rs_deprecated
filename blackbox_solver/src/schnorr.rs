@@ -1,5 +1,5 @@
 use super::{BlackboxSolver, RuntimeError};
-use crate::bindings::schnorr;
+use barretenberg::schnorr;
 
 /// Trait defining the operations associated with the Schnorr signature scheme.
 pub(crate) trait SchnorrSig {
