@@ -7,7 +7,6 @@ use crate::pedersen___plookup_commit_with_hash_index;
 /// * `hash_index` - Hash index for the commitment.
 /// # Returns
 /// * `Result<[u8; 64], BackendError>` - The computed commitment as a byte array or an error if the C++ function fails.
-
 pub fn plookup_commit_with_hash_index(
     input_buf: &[u8],
     hash_index: u32,
