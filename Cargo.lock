@@ -250,12 +250,17 @@ dependencies = [
  "acvm",
  "base64",
  "bindgen",
+ "blake2",
  "cc",
  "flate2",
  "hex",
+ "k256",
  "link-cplusplus",
  "num-bigint",
+ "p256",
  "reqwest",
+ "sha2",
+ "sha3",
  "thiserror",
 ]
 
