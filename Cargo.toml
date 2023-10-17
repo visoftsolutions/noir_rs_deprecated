@@ -4,6 +4,7 @@ members = [
     "acir_composer",
     "barretenberg",
     "blackbox_solver",
+    "acvm_runtime",
 ]
 
 resolver = "2"

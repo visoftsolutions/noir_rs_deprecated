@@ -73,6 +73,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "acvm_runtime"
+version = "0.1.0"
+dependencies = [
+ "acvm",
+ "thiserror",
+]
+
+[[package]]
 name = "acvm_stdlib"
 version = "0.27.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
