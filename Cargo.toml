@@ -10,7 +10,6 @@ members = [
 resolver = "2"
 
 [workspace.package]
-name = "noir_rs"
 version = "0.1.0"
 authors = ["Bartosz Nowak https://github.com/Okm165"]
 description = "A Pure Rust Implementation of the Noir zkSNARK Proving Scheme."
