@@ -6,22 +6,16 @@
 //!
 //! Since [`acvm`] provides Rust implementations for these opcodes, this module may be deprecated in the future.
 
-use acvm::acir::BlackBoxFunc;
+use acvm::{acir::BlackBoxFunc, BlackBoxFunctionSolver, BlackBoxResolutionError};
 
 use barretenberg::BackendError;
 
-use self::{
-    pedersen::Pedersen,
-    scalar_mul::ScalarMul,
-    schnorr::SchnorrSig,
-    traits::{BlackBoxFunctionSolver, BlackBoxResolutionError},
-};
+use self::{pedersen::Pedersen, scalar_mul::ScalarMul, schnorr::SchnorrSig};
 
 pub mod barretenberg_structures;
 pub mod pedersen;
 pub mod scalar_mul;
 pub mod schnorr;
-pub mod traits;
 
 #[derive(Debug, thiserror::Error)]
 pub(crate) enum RuntimeError {
@@ -54,7 +48,7 @@ impl BlackBoxFunctionSolver for BlackboxSolver {
         &self,
         low: &acvm::FieldElement,
         high: &acvm::FieldElement,
-    ) -> Result<(acvm::FieldElement, acvm::FieldElement), traits::BlackBoxResolutionError> {
+    ) -> Result<(acvm::FieldElement, acvm::FieldElement), BlackBoxResolutionError> {
         self.fixed_base(low, high).map_err(|err| {
             BlackBoxResolutionError::Failed(BlackBoxFunc::FixedBaseScalarMul, err.to_string())
         })
@@ -64,7 +58,7 @@ impl BlackBoxFunctionSolver for BlackboxSolver {
         &self,
         inputs: &[acvm::FieldElement],
         domain_separator: u32,
-    ) -> Result<(acvm::FieldElement, acvm::FieldElement), traits::BlackBoxResolutionError> {
+    ) -> Result<(acvm::FieldElement, acvm::FieldElement), BlackBoxResolutionError> {
         self.encrypt(inputs.to_vec(), domain_separator)
             .map_err(|err| BlackBoxResolutionError::Failed(BlackBoxFunc::Pedersen, err.to_string()))
     }
@@ -75,7 +69,7 @@ impl BlackBoxFunctionSolver for BlackboxSolver {
         public_key_y: &acvm::FieldElement,
         signature: &[u8],
         message: &[u8],
-    ) -> Result<bool, traits::BlackBoxResolutionError> {
+    ) -> Result<bool, BlackBoxResolutionError> {
         let pub_key_bytes: Vec<u8> = public_key_x
             .to_be_bytes()
             .iter()

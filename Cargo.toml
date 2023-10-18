@@ -2,9 +2,9 @@
 
 members = [
     "acir_composer",
+    "acvm_runtime",
     "barretenberg",
     "blackbox_solver",
-    "acvm_runtime",
 ]
 
 resolver = "2"
