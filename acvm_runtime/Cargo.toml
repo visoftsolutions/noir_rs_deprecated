@@ -1,16 +1,19 @@
 [package]
 name = "acvm_runtime"
 version = "0.1.0"
-edition = "2021"
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
 
 [dependencies]
-acir_composer = { path = "../acir_composer" }
-acvm = { git = "https://github.com/visoftsolutions/acvm.git" }
-barretenberg = { path = "../barretenberg" }
+acir_composer.workspace = true
+acvm.workspace = true
+barretenberg.workspace = true
+blackbox_solver.workspace = true
+
 base64 = "0.21.4"
 bincode = "1.3.3"
-blackbox_solver = { path = "../blackbox_solver" }
 flate2 = "1.0.27"
 hex = "0.4.3"
 serde = "1.0.189"
