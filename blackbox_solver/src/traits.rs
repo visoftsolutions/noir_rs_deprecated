@@ -123,10 +123,7 @@ fn verify_secp256k1_ecdsa_signature(
 
     use k256::{ecdsa::Signature, Scalar};
     use k256::{
-        elliptic_curve::{
-            sec1::{Coordinates, ToEncodedPoint},
-            IsHigh,
-        },
+        elliptic_curve::sec1::{Coordinates, ToEncodedPoint},
         AffinePoint, EncodedPoint, ProjectivePoint, PublicKey,
     };
     // Convert the inputs into k256 data structures
@@ -148,7 +145,7 @@ fn verify_secp256k1_ecdsa_signature(
     let s = signature.s();
 
     // Ensure signature is "low S" normalized ala BIP 0062
-    if s.is_high().into() {
+    if signature.normalize_s().is_some() {
         return false;
     }
 
@@ -178,10 +175,7 @@ fn verify_secp256r1_ecdsa_signature(
 
     use p256::{ecdsa::Signature, Scalar};
     use p256::{
-        elliptic_curve::{
-            sec1::{Coordinates, ToEncodedPoint},
-            IsHigh,
-        },
+        elliptic_curve::sec1::{Coordinates, ToEncodedPoint},
         AffinePoint, EncodedPoint, ProjectivePoint, PublicKey,
     };
 
@@ -204,7 +198,7 @@ fn verify_secp256r1_ecdsa_signature(
     let s = signature.s();
 
     // Ensure signature is "low S" normalized ala BIP 0062
-    if s.is_high().into() {
+    if signature.normalize_s().is_some() {
         return false;
     }
 
