@@ -1,10 +1,28 @@
+// Suppress the flurry of warnings caused by using "C" naming conventions
+#![allow(non_upper_case_globals)]
+#![allow(non_camel_case_types)]
+#![allow(non_snake_case)]
+
 use core::slice;
 use std::ffi::CStr;
 
 pub mod acir;
 pub mod circuit;
 pub mod examples;
+pub mod pedersen;
+pub mod schnorr;
 pub mod srs;
+
+// This matches bindgen::Builder output
+include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
+
+#[derive(Debug, thiserror::Error)]
+pub enum BackendError {
+    #[error("Binding call error")]
+    BindingCallError(String),
+    #[error("Binding call output pointer error")]
+    BindingCallPointerError(String),
+}
 
 pub struct Buffer {
     data: Vec<u8>,
@@ -16,9 +34,11 @@ impl Buffer {
     /// # Safety
     /// This method is unsafe because it trusts the caller to ensure that `ptr` is a valid pointer
     /// pointing to at least `u32` bytes plus the length indicated by the u32 value.
-    pub unsafe fn from_ptr(ptr: *const u8) -> Result<Self, String> {
+    pub unsafe fn from_ptr(ptr: *const u8) -> Result<Self, BackendError> {
         if ptr.is_null() {
-            return Err("Pointer is null.".to_string());
+            return Err(BackendError::BindingCallPointerError(
+                "Pointer is null.".to_string(),
+            ));
         }
         let len_slice = slice::from_raw_parts(ptr, 4);
         let len = u32::from_be_bytes([len_slice[0], len_slice[1], len_slice[2], len_slice[3]]);
@@ -62,6 +82,8 @@ pub unsafe fn parse_c_str(ptr: *const ::std::os::raw::c_char) -> Option<String> 
 /// # Examples
 ///
 /// ```
+/// use barretenberg::serialize_slice;
+///
 /// let data = &[1, 2, 3, 4, 5];
 /// let serialized = serialize_slice(data);
 /// assert_eq!(serialized, vec![0, 0, 0, 5, 1, 2, 3, 4, 5]);

@@ -1,7 +1,7 @@
 fn main() {
     println!("cargo:rerun-if-changed=build.rs");
     // Tell cargo to look for shared libraries in the specified directory
-    println!("cargo:rustc-link-search=./aztec-packages/barretenberg/cpp/build/lib");
+    println!("cargo:rustc-link-search=./barretenberg/aztec-packages/barretenberg/cpp/build/lib");
     // Tell cargo to tell rustc to link static barretenberg
     println!("cargo:rustc-link-lib=static=barretenberg");
     println!("cargo:rustc-link-lib=stdc++");
@@ -19,6 +19,8 @@ fn main() {
             #include <barretenberg/dsl/acir_proofs/rust_bind.hpp>
             #include <barretenberg/srs/rust_bind.hpp>
             #include <barretenberg/examples/rust_bind.hpp>
+            #include <barretenberg/crypto/schnorr/rust_bind.hpp>
+            #include <barretenberg/crypto/pedersen_commitment/rust_bind.hpp>
             "#,
         )
         .allowlist_function("rust_acir_get_circuit_sizes")
@@ -34,6 +36,10 @@ fn main() {
         .allowlist_function("rust_acir_get_solidity_verifier")
         .allowlist_function("rust_acir_serialize_proof_into_fields")
         .allowlist_function("rust_acir_serialize_verification_key_into_fields")
+        .allowlist_function("pedersen___plookup_commit_with_hash_index")
+        .allowlist_function("schnorr_compute_public_key")
+        .allowlist_function("schnorr_construct_signature")
+        .allowlist_function("schnorr_verify_signature")
         .allowlist_function("rust_srs_init_srs")
         .allowlist_function("rust_examples_simple_create_and_verify_proof")
         .generate()
