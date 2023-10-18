@@ -1,5 +1,5 @@
 #[cfg(test)]
-pub mod test;
+pub mod tests;
 
 use barretenberg::{
     acir::{
