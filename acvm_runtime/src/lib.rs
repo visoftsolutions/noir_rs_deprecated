@@ -1,4 +1,3 @@
-pub use self::execute::execute_circuit;
-
-mod errors;
-mod execute;
+pub mod circuit;
+pub mod errors;
+pub mod execute;
