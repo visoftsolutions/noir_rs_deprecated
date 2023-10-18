@@ -1,12 +1,15 @@
 [package]
 name = "blackbox_solver"
 version = "0.1.0"
-edition = "2021"
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
 
 [dependencies]
-acvm = { git = "https://github.com/visoftsolutions/acvm.git" }
-barretenberg = { path = "../barretenberg" }
+acvm.workspace = true
+barretenberg.workspace = true
+
 blake2 = "0.10.6"
 hex = "0.4.3"
 k256 = { version = "0.13.1", features = [

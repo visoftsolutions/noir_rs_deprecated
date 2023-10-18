@@ -8,3 +8,18 @@ members = [
 ]
 
 resolver = "2"
+
+[workspace.package]
+name = "noir_rs"
+version = "0.1.0"
+authors = ["Bartosz Nowak https://github.com/Okm165"]
+description = "A Pure Rust Implementation of the Noir zkSNARK Proving Scheme."
+edition = "2021"
+license = "Apache"
+repository = "https://github.com/visoftsolutions/noir_rs"
+
+[workspace.dependencies]
+acir_composer = { path = "acir_composer" }
+acvm = { git = "https://github.com/visoftsolutions/acvm.git" }
+barretenberg = { path = "barretenberg" }
+blackbox_solver = { path = "blackbox_solver" }
