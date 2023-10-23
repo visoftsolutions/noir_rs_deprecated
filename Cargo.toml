@@ -5,6 +5,7 @@ members = [
     "acvm_runtime",
     "barretenberg",
     "blackbox_solver",
+    "noir_rs",
 ]
 
 resolver = "2"
@@ -22,3 +23,4 @@ acir_composer = { path = "acir_composer" }
 acvm = { git = "https://github.com/visoftsolutions/acvm.git" }
 barretenberg = { path = "barretenberg" }
 blackbox_solver = { path = "blackbox_solver" }
+acvm_runtime = { path = "acvm_runtime" }

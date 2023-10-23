@@ -1,4 +1,3 @@
-
 fn main() {
     // Notify Cargo to rerun this build script if `build.rs` changes.
     println!("cargo:rerun-if-changed=build.rs");
@@ -20,7 +19,7 @@ fn main() {
         // Provide Clang arguments for C++20 and specify we are working with C++.
         .clang_args(&["-std=c++20", "-xc++"])
         // Add the include path for headers.
-        .clang_args(&[format!("-I{}/include", dst.display())])
+        .clang_args([format!("-I{}/include", dst.display())])
         // Specify the headers to generate bindings from.
         .header_contents(
             "wrapper.hpp",

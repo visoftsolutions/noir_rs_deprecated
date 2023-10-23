@@ -3,7 +3,7 @@ use acvm::pwg::{ACVMStatus, ErrorLocation, OpcodeResolutionError, ACVM};
 use acvm::BlackBoxFunctionSolver;
 use acvm::{acir::circuit::Circuit, acir::native_types::WitnessMap};
 
-use crate::errors::{ExecutionError, ACVMError};
+use crate::errors::{ACVMError, ExecutionError};
 
 /// Executes a given ACIR circuit with an initial witness, using a black box function solver.
 ///

@@ -1,8 +1,17 @@
 use std::io::Read;
 
 use acir_composer::AcirComposer;
-use acvm::{acir::{circuit::Circuit, native_types::{WitnessMap, Witness}}, FieldElement};
-use barretenberg::{circuit::circuit_size::get_circuit_sizes, srs::{netsrs::NetSrs, srs_init}};
+use acvm::{
+    acir::{
+        circuit::Circuit,
+        native_types::{Witness, WitnessMap},
+    },
+    FieldElement,
+};
+use barretenberg::{
+    circuit::circuit_size::get_circuit_sizes,
+    srs::{netsrs::NetSrs, srs_init},
+};
 use base64::{engine::general_purpose, Engine};
 use blackbox_solver::BlackboxSolver;
 use flate2::bufread::GzDecoder;
