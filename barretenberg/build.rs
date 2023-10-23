@@ -18,7 +18,7 @@ fn main() {
     // Begin setting up bindgen to generate Rust bindings for C++ code.
     let bindings = bindgen::Builder::default()
         // Provide Clang arguments for C++20 and specify we are working with C++.
-        .clang_args(&["-std=gnu++20", "-xc++"])
+        .clang_args(&["-std=c++20", "-xc++"])
         // Add the include path for headers.
         .clang_args(&[format!("-I{}/include", dst.display())])
         // Specify the headers to generate bindings from.
