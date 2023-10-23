@@ -2,7 +2,7 @@
 
 Welcome to `noir_rs`, a Rust-centric package designed for users seeking a straightforward, lightweight interface to generate and verify zkSNARK proofs without any WebAssembly (WASM) dependency.
 
-![GitHub Workflow Status](https://github.com/your_username/your_repo_name/workflows/rust.yml/badge.svg)
+![GitHub Workflow Status](https://github.com/visoftsolutions/noir_rs/workflows/rust.yml/badge.svg)
 
 ## Key Highlights:
 
