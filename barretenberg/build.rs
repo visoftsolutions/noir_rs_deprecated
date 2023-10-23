@@ -1,26 +1,35 @@
+
 fn main() {
+    // Notify Cargo to rerun this build script if `build.rs` changes.
     println!("cargo:rerun-if-changed=build.rs");
-    // Tell cargo to look for shared libraries in the specified directory
-    println!("cargo:rustc-link-search=./barretenberg/aztec-packages/barretenberg/cpp/build/lib");
-    // Tell cargo to tell rustc to link static barretenberg
+
+    // Build the C++ code using CMake and get the build directory path.
+    let dst = cmake::build("aztec-packages/barretenberg/cpp");
+
+    // Add the library search path for Rust to find during linking.
+    println!("cargo:rustc-link-search={}/lib", dst.display());
+
+    // Link the `barretenberg` static library.
     println!("cargo:rustc-link-lib=static=barretenberg");
+
+    // Link the C++ standard library.
     println!("cargo:rustc-link-lib=stdc++");
 
-    // The bindgen::Builder is the main entry point
-    // to bindgen, and lets you build up options for
-    // the resulting bindings.
+    // Begin setting up bindgen to generate Rust bindings for C++ code.
     let bindings = bindgen::Builder::default()
-        // Clang args so that we can compile C++ with C++20
+        // Provide Clang arguments for C++20 and specify we are working with C++.
         .clang_args(&["-std=gnu++20", "-xc++"])
-        .clang_args(&["-I./aztec-packages/barretenberg/cpp/src"])
+        // Add the include path for headers.
+        .clang_args(&[format!("-I{}/include", dst.display())])
+        // Specify the headers to generate bindings from.
         .header_contents(
             "wrapper.hpp",
             r#"
-            #include <barretenberg/dsl/acir_proofs/rust_bind.hpp>
-            #include <barretenberg/srs/rust_bind.hpp>
-            #include <barretenberg/examples/rust_bind.hpp>
-            #include <barretenberg/crypto/schnorr/rust_bind.hpp>
-            #include <barretenberg/crypto/pedersen_commitment/rust_bind.hpp>
+                #include <barretenberg/dsl/acir_proofs/rust_bind.hpp>
+                #include <barretenberg/srs/rust_bind.hpp>
+                #include <barretenberg/examples/rust_bind.hpp>
+                #include <barretenberg/crypto/schnorr/rust_bind.hpp>
+                #include <barretenberg/crypto/pedersen_commitment/rust_bind.hpp>
             "#,
         )
         .allowlist_function("rust_acir_get_circuit_sizes")
@@ -42,11 +51,14 @@ fn main() {
         .allowlist_function("schnorr_verify_signature")
         .allowlist_function("rust_srs_init_srs")
         .allowlist_function("rust_examples_simple_create_and_verify_proof")
+        // Generate the bindings.
         .generate()
         .expect("Couldn't generate bindings!");
 
+    // Determine the output path for the bindings using the OUT_DIR environment variable.
     let out_path = std::path::PathBuf::from(std::env::var("OUT_DIR").unwrap());
 
+    // Write the generated bindings to a file.
     bindings
         .write_to_file(out_path.join("bindings.rs"))
         .expect("Couldn't write bindings!");
