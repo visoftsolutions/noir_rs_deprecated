@@ -1,4 +1,4 @@
-name: Rust
+name: Rust build&test fedora
 
 on:
   push:
