@@ -1,5 +1,6 @@
 use std::io::Read;
 
+use acir_composer::AcirComposer;
 use acvm::acir::{native_types::WitnessMap, circuit::Circuit};
 use acvm_runtime::execute::execute_circuit;
 use barretenberg::{
