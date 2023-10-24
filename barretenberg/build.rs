@@ -12,7 +12,7 @@ fn main() {
     println!("cargo:rustc-link-lib=static=barretenberg");
     
     // Link the C++ standard library.
-    if cfg!(macos) || cfg!(ios) {
+    if cfg!(target_os = "macos") || cfg!(target_os = "ios") {
         println!("cargo:rustc-link-lib=c++");
     } else {
         println!("cargo:rustc-link-lib=stdc++");
