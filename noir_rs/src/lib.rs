@@ -1,9 +1,6 @@
 use std::io::Read;
 
-use acvm::acir::{
-    circuit::Circuit,
-    native_types::{Witness, WitnessMap},
-};
+use acvm::acir::{native_types::WitnessMap, circuit::Circuit};
 use acvm_runtime::execute::execute_circuit;
 use barretenberg::{
     circuit::circuit_size::get_circuit_sizes,
@@ -13,10 +10,7 @@ use base64::{engine::general_purpose, Engine};
 use blackbox_solver::BlackboxSolver;
 use flate2::bufread::GzDecoder;
 
-pub use acir_composer::*;
-pub use acvm::*;
-pub use acvm_runtime::*;
-pub use barretenberg::*;
+pub use acvm::acir::*;
 
 pub fn prove(
     circuit_bytecode: String,
