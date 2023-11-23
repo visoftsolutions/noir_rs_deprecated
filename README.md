@@ -35,6 +35,12 @@ zkSNARKs are rapidly gaining traction in the tech world, opening doors to variou
 
 ## Development Commands:
 
+### Clone repository:
+#### Repository uses aztec-packages as a submodule after cloning it initialize submodules:
+```
+git submodule update --init --recursive
+```
+
 ### Building the Project:
 ```
 cargo build
