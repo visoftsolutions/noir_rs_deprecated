@@ -21,6 +21,9 @@ jobs:
     steps:
     - name:
       run: sudo apt update && sudo apt install -y git build-essential
+    - uses: ATiltedTree/setup-rust@v1
+      with:
+        rust-version: stable
     - uses: actions/checkout@v3
       with:
         submodules: recursive
