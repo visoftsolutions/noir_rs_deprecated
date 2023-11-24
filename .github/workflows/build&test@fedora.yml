@@ -16,7 +16,6 @@ jobs:
         os: [arc-runner-set]
     
     runs-on: ${{ matrix.os }}
-    container: rust:latest
 
     steps:
     - name:
