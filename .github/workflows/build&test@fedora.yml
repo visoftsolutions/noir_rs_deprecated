@@ -16,9 +16,10 @@ jobs:
         os: [arc-runner-set]
     
     runs-on: ${{ matrix.os }}
-    container: rust:slim-buster
 
     steps:
+    - name:
+      run: sudo apt install git cmake
     - uses: actions/checkout@v3
       with:
         submodules: recursive
