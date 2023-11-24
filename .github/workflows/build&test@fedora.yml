@@ -19,7 +19,7 @@ jobs:
 
     steps:
     - name:
-      run: sudo apt update && sudo apt install git cmake
+      run: sudo apt update && sudo apt install -y git cmake gcc-c++
     - uses: actions/checkout@v3
       with:
         submodules: recursive
