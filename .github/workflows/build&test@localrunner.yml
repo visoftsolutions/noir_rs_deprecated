@@ -20,7 +20,7 @@ jobs:
 
     steps:
     - name: Install
-      run: apt update && apt upgrade -y && apt install -y git build-essential cmake curl pkg-config libssl-dev
+      run: apt update && apt upgrade -y && apt install -y git build-essential cmake curl pkg-config libssl-dev libclang-dev
     - uses: actions/checkout@v3
       with:
         submodules: recursive
