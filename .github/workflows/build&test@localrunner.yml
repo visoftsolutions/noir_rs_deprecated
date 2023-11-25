@@ -1,0 +1,34 @@
+name: Rust build&test fedora
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [arc-runner-set]
+    
+    runs-on: ${{ matrix.os }}
+    container: rust:latest
+
+    steps:
+    - name: Install
+      run: sudo apt update && sudo apt upgrade -y && sudo apt install -y git build-essential cmake curl pkg-config libssl-dev
+    - name: Setup cmake
+      uses: jwlawson/actions-setup-cmake@v1.13
+      with:
+        cmake-version: '3.24.x'
+    - uses: actions/checkout@v3
+      with:
+        submodules: recursive
+    - name: Build
+      run: cargo build -vv
+    - name: Run tests
+      run: cargo test -vv
