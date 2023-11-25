@@ -1,4 +1,4 @@
-name: Rust build&test fedora
+name: Rust build&test arcrunner
 
 on:
   push:

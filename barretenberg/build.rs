@@ -10,14 +10,13 @@ fn main() {
 
     // Link the `barretenberg` static library.
     println!("cargo:rustc-link-lib=static=barretenberg");
-    
+
     // Link the C++ standard library.
     if cfg!(target_os = "macos") || cfg!(target_os = "ios") {
         println!("cargo:rustc-link-lib=c++");
     } else {
         println!("cargo:rustc-link-lib=stdc++");
     }
-    
 
     // Begin setting up bindgen to generate Rust bindings for C++ code.
     let bindings = bindgen::Builder::default()

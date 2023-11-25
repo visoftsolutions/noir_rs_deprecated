@@ -1,7 +1,7 @@
 use std::io::Read;
 
 use acir_composer::AcirComposer;
-use acvm::acir::{native_types::WitnessMap, circuit::Circuit};
+use acvm::acir::{circuit::Circuit, native_types::WitnessMap};
 use acvm_runtime::execute::execute_circuit;
 use barretenberg::{
     circuit::circuit_size::get_circuit_sizes,
