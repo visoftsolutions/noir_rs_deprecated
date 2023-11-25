@@ -16,7 +16,7 @@ jobs:
         os: [arc-runner-set]
     
     runs-on: ${{ matrix.os }}
-    container: docker.io/rust:1.67
+    container: docker.io/rust:latest
 
     steps:
     - name: Install
