@@ -19,7 +19,11 @@ jobs:
 
     steps:
     - name: Install
-      run: sudo apt update && sudo apt upgrade -y && sudo apt install -y git build-essential cmake curl pkg-config libssl-dev libclang-dev && curl https://sh.rustup.rs -sSf | sh -s -- -y
+      run: sudo apt update && sudo apt upgrade -y && sudo apt install -y git build-essential cmake curl pkg-config libssl-dev libclang-dev
+    - name: Setup | Rust
+      uses: ATiltedTree/setup-rust@v1
+      with:
+        rust-version: stable
     - uses: actions/checkout@v3
       with:
         submodules: recursive
