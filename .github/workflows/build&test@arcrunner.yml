@@ -19,11 +19,15 @@ jobs:
 
     steps:
     - name: Install
-      run: sudo apt update && sudo apt upgrade -y && sudo apt install -y git build-essential cmake curl pkg-config libssl-dev libclang-dev
+      run: sudo apt update && sudo apt upgrade -y && sudo apt install -y git build-essential curl pkg-config libssl-dev libclang-dev
     - name: Setup | Rust
       uses: ATiltedTree/setup-rust@v1
       with:
         rust-version: stable
+    - name: Setup | cmake
+      uses: jwlawson/actions-setup-cmake@v1.13
+      with:
+        cmake-version: '3.3.0'
     - uses: actions/checkout@v3
       with:
         submodules: recursive
