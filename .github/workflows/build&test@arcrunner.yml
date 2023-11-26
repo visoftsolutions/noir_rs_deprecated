@@ -18,8 +18,6 @@ jobs:
     runs-on: ${{ matrix.runner }}
 
     steps:
-    - name: user
-      run: whoami
     - name: Install
       run: apt update && apt upgrade -y && apt install -y git build-essential cmake curl pkg-config libssl-dev libclang-dev
     - uses: actions/checkout@v3
