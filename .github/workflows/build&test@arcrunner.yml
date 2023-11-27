@@ -19,7 +19,11 @@ jobs:
 
     steps:
     - name: Install
-      run: sudo apt update && sudo apt upgrade -y && sudo apt install -y git build-essential curl pkg-config libssl-dev libclang-dev
+      run: sudo apt update && sudo apt upgrade -y && sudo apt install -y git curl pkg-config libssl-dev
+    - name: Setup | Cpp
+      uses: rlalik/setup-cpp-compiler@master
+      with:
+        compiler: latest
     - name: Setup | Rust
       uses: ATiltedTree/setup-rust@v1
       with:
