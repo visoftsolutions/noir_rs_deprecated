@@ -23,7 +23,7 @@ jobs:
     - name: Setup | Cpp
       uses: rlalik/setup-cpp-compiler@master
       with:
-        compiler: latest
+        compiler: clang++-12
     - name: Setup | Rust
       uses: ATiltedTree/setup-rust@v1
       with:
