@@ -8,6 +8,10 @@ members = [
     "noir_rs",
 ]
 
+exclude = [
+    "examples"
+]
+
 resolver = "2"
 
 [workspace.package]
